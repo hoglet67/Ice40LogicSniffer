@@ -1,0 +1,11 @@
+*~
+#*
+not_in_git/
+# IceStorm files
+sniffer.bin
+sniffer.blif
+sniffer.log
+sniffer.txt
+# Simulation files
+dump.vcd
+a.out
