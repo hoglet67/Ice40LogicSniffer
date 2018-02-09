@@ -39,17 +39,14 @@ input [WIDTH-1:0] dataIn;
 output validOut;
 output [WIDTH-1:0] dataOut;
 
-wire [3:0] dly = DELAY-1;
-SRLC16E s(.A0(dly[0]), .A1(dly[1]), .A2(dly[2]), .A3(dly[3]), .CLK(clock), .CE(1'b1), .D(validIn), .Q(validOut));
-
-wire [WIDTH-1:0] dataOut;
-genvar i;
-generate
-  for (i=0; i<WIDTH; i=i+1) 
-    begin : shiftgen
-      SRLC16E s(.A0(dly[0]), .A1(dly[1]), .A2(dly[2]), .A3(dly[3]), .CLK(clock), .CE(1'b1), .D(dataIn[i]), .Q(dataOut[i]));
-    end
-endgenerate
+reg [(WIDTH + 1) * DELAY - 1 : 0] delay;
+   
+always @(posedge clock) begin
+   delay <= {dataIn, validIn, delay[(WIDTH + 1) * DELAY - 1 : WIDTH + 1]};
+end
+   
+assign validOut = delay[WIDTH];
+assign dataOut = delay[WIDTH - 1 : 0];
 
 endmodule
 

@@ -1,115 +1,146 @@
-# User Constraint File for BlackIce Acorn Atom (Ice40Atom)
-
-# Onboard 100MHz oscillator
-set_io clk100 129
-
-# ARM SPI Port
-set_io arm_ss   71 # also LED1
-set_io arm_miso 67 # also LED2
-set_io arm_mosi 68 # also LED3
-set_io arm_sclk 70 # also LED4
-
-# Test
-#set_io test0 106 # PMOD23 PMOD 5/6 pin  6
-#set_io test1 110 # PMOD22 PMOD 5/6 pin  8
-#set_io test2 113 # PMOD21 PMOD 5/6 pin 10
-#set_io test3 144 # PMOD20 PMOD 5/6 pin 12
-
-# SD Card
-set_io ss       38 # DIG18
-set_io sclk     37 # DIG19
-set_io mosi     41 # DIG16
-set_io miso     63 # B1
-
-# Switches
-#set_io sw1_2    37 # DIG19
-#set_io sw1_1    38 # DIG18
-#set_io sw2_2    39 # DIG17
-#set_io sw2_1    41 # DIG16
-#set_io sw3      63 # B1 (active low)
-set_io sw4      64 # B2 (active low)
-
-# Cassette / Sound
-set_io cas_in   21 # PMOD43 PMOD 11/12 pin 5
-set_io cas_out  22 # PMOD42 PMOD 11/12 pin 7
-set_io sound    33 # PMOD41 PMOD 11/12 pin 9
-
-# Keyboard - Matches Digilent PmodPS/2 plugged into lower half of PMOD11/12
-set_io ps2_clk  26 # PMOD46 = PMOD 11/12 pin 8
-set_io ps2_data 32 # PMOD44 = PMOD 11/12 pin 12
-
-# VGA Output - Matches Digilent PmodVGA plugged into PMOD7/8/9/10
-set_io red[3]     15 # PMOD35 = PMOD 9/10 pin  5
-set_io red[2]     16 # PMOD34 = PMOD 9/10 pin  7
-set_io red[1]     19 # PMOD33 = PMOD 9/10 pin  9
-set_io red[0]     20 # PMOD32 = PMOD 9/10 pin 11
-
-set_io green[3]    1 # PMOD27 = PMOD  7/8 pin  5
-set_io green[2]    2 # PMOD26 = PMOD  7/8 pin  7
-set_io green[1]    9 # PMOD25 = PMOD  7/8 pin  9
-set_io green[0]   10 # PMOD24 = PMOD  7/8 pin 11
-
-set_io blue[3]    11 # PMOD39 = PMOD 9/10 pin  6
-set_io blue[2]    12 # PMOD38 = PMOD 9/10 pin  8
-set_io blue[1]    17 # PMOD37 = PMOD 9/10 pin 10
-set_io blue[0]    18 # PMOD36 = PMOD 9/10 pin 12
-
-set_io hsync       8 # PMOD28 = PMOD  7/8 pin 12
-set_io vsync       7 # PMOD29 = PMOD  7/8 pin 10
-
-# PMOD UART connections
-#set_io txd   97 # P11 (i_tx) - Pmod 3/4 pin 5 (top row)
-#set_io rxd   96 # P15 (i_rx) - Pmod 3/4 pin 6 (bottom row)
-
-# USB UART / Pi Connector
+################################################################################
+##                                                                             #
+## Copyright 2016 myStorm Copyright and related                                #
+## rights are licensed under the Solderpad Hardware License, Version 0.51      #
+## (the “License”); you may not use this file except in compliance with        #
+## the License. You may obtain a copy of the License at                        #
+## http://solderpad.org/licenses/SHL-0.51. Unless required by applicable       #
+## law or agreed to in writing, software, hardware and materials               #
+## distributed under this License is distributed on an “AS IS” BASIS,          #
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or             #
+## implied. See the License for the specific language governing                #
+## permissions and limitations under the License.                              #
+##                                                                             #
+################################################################################
 #
-# From the schematic it looks like:
+## User Constraint File for myStorm
 #
-# Pin 2 of the CH340G (TxD output) is connected to
-# - Pin 8 of the Pi Header (TxD0 output)
-# - STM32F103RET6 pin 43 (PA10)
-# - net is called RX
-# - and also via a resistor to PMOD P2, FPGA Pin 88
-#
-# Pin 3 of the CH340G (RxD input) is connected to
-# - Pin 10 of the Pi Header (RxD0 input)
-# - STM32F103RET6 pin 42 (PA9)
-# - net is called TX
-# - and also via a resistor to PMOD P3, FPGA Pin 85
-#
-# NOTE: It appears the conenections to the Pi Header are swapped (i.e. Pi output to USB UART output)
-#set_io txd  85
-#set_io rxd  88
+## Onboard 100Mhz oscillator
+set_io bf_clock 129
 
+# USB UART
+set_io tx  85
+set_io rx  88
+
+set_io armLEDnn     71 #LD4,!SS,p14_1
+set_io triggerLEDnn 67 #LD3,MISO,p14_2
+set_io dataReady    68 #LD2,MOSI,p14_3
+#set_io             70 #LD1,SCL,p14_4
+#
+##pmod 1
+#
+#set_io PMOD[0] 94 # rd6
+#set_io PMOD[1] 91 # rd4
+#set_io PMOD[2] 88 # rd2
+#set_io PMOD[3] 85 # rd0
+#
+##pmod 2
+set_io extClockIn  95 # PMOD[4] # rd7
+set_io extClockOut  93 # PMOD[5] # rd5
+set_io extTriggerIn  90 # PMOD[6] # rd3
+set_io extTriggerOut  87 # PMOD[7] # rd1
+#
+##pmod 3 GPIO
+set_io indata[0] 105 # PMOD[8] # c5
+set_io indata[1] 102 # PMOD[9] # c3
+set_io indata[2] 99 # PMOD[10] # c1
+set_io indata[3] 97 # PMOD[11] # i_tx
+#
+##pmod 4
+set_io indata[4] 104 # PMOD[12] # c4
+set_io indata[5] 101 # PMOD[13] # c2
+set_io indata[6] 98 # PMOD[14] # c0
+set_io indata[7] 96 # PMOD[15] # i_rx
+#
+##pmod 5 GPIO
+set_io indata[8] 143 # PMOD[16] #g2
+set_io indata[9] 114 # PMOD[17] #c11
+set_io indata[10] 112 # PMOD[18] #c9
+set_io indata[11] 107 # PMOD[19] #c7
+#
+##pmod 6 GPIO
+set_io indata[12] 144 # PMOD[20] #G1
+set_io indata[13] 113 # PMOD[21] #C10
+set_io indata[14] 110 # PMOD[22] #C8
+set_io indata[15] 106 # PMOD[23] #C6
+#
+##pmod 7 lvds pairs 2 & 5
+set_io indata[16] 10 # PMOD[24] # 5b
+set_io indata[17] 9 # PMOD[25] # 5a
+set_io indata[18] 2 # PMOD[26] # 2b
+set_io indata[19] 1 # PMOD[27] # 2a
+#
+##pmod 8 lvds pairs 3 & 4
+set_io indata[20] 8 # PMOD[28] # 4b
+set_io indata[21] 7 # PMOD[29] # 4a
+set_io indata[22] 4 # PMOD[30] # 3b
+set_io indata[23] 3 # PMOD[31] # 3a
+#
+##pmod 9 lvds pairs 10 & 13
+set_io indata[24] 20 # PMOD[32] # 13b
+set_io indata[25] 19 # PMOD[33] # 13a
+set_io indata[26] 16 # PMOD[34] # 10b
+set_io indata[27] 15 # PMOD[35] # 10a
+#
+##pmod 10 lvds pairs 8 & 12
+set_io indata[28] 18 # PMOD[36] # 12b
+set_io indata[29] 17 # PMOD[37] # 12a
+set_io indata[30] 12 # PMOD[38] # 8b
+set_io indata[31] 11 # PMOD[39] # 8a
+#
+##pmod 11 lvds pairs 14 & 25
+#set_io PMOD[40] 34 # 25b
+#set_io PMOD[41] 33 # 25a
+#set_io PMOD[42] 22 # 14B
+#set_io PMOD[43] 21 # 14a
+#
+##pmod 12 lvds pairs 18 & 24
+#set_io PMOD[44] 32 # 24b
+#set_io PMOD[45] 31 # 24a
+#set_io PMOD[46] 26 # 18b
+#set_io PMOD[47] 25 # 18a
+#
+##pmod 13 lvds pairs 17 & 23
+#set_io PMOD[48] 29 # 23b
+#set_io PMOD[49] 28 # 23a
+#set_io PMOD[50] 24 # 17b
+#set_io PMOD[51] 23 # 17a
+#
+#pmod 14 SPI muxed with leds
+#set_io PMOD[52] 71 #LD4,!SS,p14_1
+#set_io PMOD[53] 67 #LD3,MISO,p14_2
+#set_io PMOD[54] 68 #LD2,MOSI,p14_3
+#set_io PMOD[55] 70 #LD1,SCL,p14_4
+#
 # SRAM
-set_io ADR[0] 137
-set_io ADR[1] 138
-set_io ADR[2] 139
-set_io ADR[3] 141
-set_io ADR[4] 142
-set_io ADR[5] 42
-set_io ADR[6] 43
-set_io ADR[7] 44
-set_io ADR[8] 73
-set_io ADR[9] 74
-set_io ADR[10] 75
-set_io ADR[11] 76
-set_io ADR[12] 115
-set_io ADR[13] 116
-set_io ADR[14] 117
-set_io ADR[15] 118
-set_io ADR[16] 119
-set_io ADR[17] 78
+#set_io ADR[0] 137
+#set_io ADR[1] 138
+#set_io ADR[2] 139
+#set_io ADR[3] 141
+#set_io ADR[4] 142
+#set_io ADR[5] 42
+#set_io ADR[6] 43
+#set_io ADR[7] 44
+#set_io ADR[8] 73
+#set_io ADR[9] 74
+#set_io ADR[10] 75
+#set_io ADR[11] 76
+#set_io ADR[12] 115
+#set_io ADR[13] 116
+#set_io ADR[14] 117
+#set_io ADR[15] 118
+#set_io ADR[16] 119
+#set_io ADR[17] 78
 #set_io ADR[18] 62
 
-set_io DAT[0] 135
-set_io DAT[1] 134
-set_io DAT[2] 130
-set_io DAT[3] 128
-set_io DAT[4] 125
-set_io DAT[5] 124
-set_io DAT[6] 122
-set_io DAT[7] 121
+#set_io DAT[0] 135
+#set_io DAT[1] 134
+#set_io DAT[2] 130
+#set_io DAT[3] 128
+#set_io DAT[4] 125
+#set_io DAT[5] 124
+#set_io DAT[6] 122
+#set_io DAT[7] 121
 #set_io DAT[8] 61
 #set_io DAT[9] 60
 #set_io DAT[10] 56
@@ -119,6 +150,7 @@ set_io DAT[7] 121
 #set_io DAT[14] 48
 #set_io DAT[15] 47
 
-set_io RAMOE_b 45
-set_io RAMWE_b 120
-set_io RAMCS_b 136
+#set_io RAMOE 45
+#set_io RAMWE 120
+#set_io RAMCS 136
+

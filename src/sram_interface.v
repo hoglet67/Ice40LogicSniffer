@@ -31,9 +31,9 @@
 //--------------------------------------------------------------------------------
 //
 
-`define BRAM_MAX_ADDRESS 10*1024-1  // 10K x 36
-`define BRAM_MAXINDEX 13  // 13:0 = 16K
-`define BRAM_MAXDATA 35
+`define BRAM_MAX_ADDRESS 4*1024-1  // 4K x 32
+`define BRAM_MAXINDEX 11  // 11:0 = 4K
+`define BRAM_MAXDATA 31
 
 `timescale 1ns/100ps
 
@@ -199,25 +199,21 @@ end
 //
 wire [`BRAM_MAXINDEX:0] #1 ram_ADDR = address;
 wire #1 ram_WE = write;
-BRAM10k9bit RAMBG0(
+BRAM4k8bit RAMBG0(
   .CLK(clk), .WE(ram_WE), .EN(clkenb[0]), .ADDR(ram_ADDR),
-  .DIN(ram_datain[7:0]), .DOUT(ram_dataout[7:0]),
-  .DINP(ram_datain[32]), .DOUTP(ram_dataout[32]));
+  .DIN(ram_datain[7:0]), .DOUT(ram_dataout[7:0]));
 
-BRAM10k9bit RAMBG1(
+BRAM4k8bit RAMBG1(
   .CLK(clk), .WE(ram_WE), .EN(clkenb[1]), .ADDR(ram_ADDR),
-  .DIN(ram_datain[15:8]), .DOUT(ram_dataout[15:8]),
-  .DINP(ram_datain[33]), .DOUTP(ram_dataout[33]));
+  .DIN(ram_datain[15:8]), .DOUT(ram_dataout[15:8]));
 
-BRAM10k9bit RAMBG2(
+BRAM4k8bit RAMBG2(
   .CLK(clk), .WE(ram_WE), .EN(clkenb[2]), .ADDR(ram_ADDR),
-  .DIN(ram_datain[23:16]), .DOUT(ram_dataout[23:16]),
-  .DINP(ram_datain[34]), .DOUTP(ram_dataout[34]));
+  .DIN(ram_datain[23:16]), .DOUT(ram_dataout[23:16]));
 
-BRAM10k9bit RAMBG3(
+BRAM4k8bit RAMBG3(
   .CLK(clk), .WE(ram_WE), .EN(clkenb[3]), .ADDR(ram_ADDR),
-  .DIN(ram_datain[31:24]), .DOUT(ram_dataout[31:24]),
-  .DINP(ram_datain[35]), .DOUTP(ram_dataout[35]));
+  .DIN(ram_datain[31:24]), .DOUT(ram_dataout[31:24]));
 
 assign rddata = ram_dataout;
 

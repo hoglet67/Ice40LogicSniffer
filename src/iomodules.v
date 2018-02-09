@@ -2,7 +2,7 @@
 //
 // iomodules.v
 // Copyright (C) 2011 Ian Davis
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -19,7 +19,7 @@
 //
 //--------------------------------------------------------------------------------
 //
-// Details: 
+// Details:
 //   http://www.dangerousprototypes.com/ols
 //   http://www.gadgetfactory.net/gf/project/butterflylogic
 //   http://www.mygizmos.org/ols
@@ -57,7 +57,8 @@ endmodule
 module ddr_clkout (pad, clk);
 input clk;
 output pad;
-ODDR2 ddrout (.Q(pad), .D0(1'b0), .D1(1'b1), .C0(!clk), .C1(clk));
+//ODDR2 ddrout (.Q(pad), .D0(1'b0), .D1(1'b1), .C0(!clk), .C1(clk));
+assign pad=clock;
 endmodule
 
 
@@ -73,4 +74,3 @@ always @(posedge clk) indata = next_indata;
 always @(negedge clk) indata180 = next_indata;
 always @* begin #1; next_indata = pad; end
 endmodule
-

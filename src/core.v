@@ -2,7 +2,7 @@
 // core.vhd
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -42,13 +42,13 @@
 //`define SLOW_EXTCLK
 
 module core(
-  clock, extReset, 
-  extClock, extTriggerIn, 
-  opcode, config_data, execute, indata, outputBusy, 
+  clock, extReset,
+  extClock, extTriggerIn,
+  opcode, config_data, execute, indata, outputBusy,
   // outputs...
   sampleReady50, outputSend, stableInput,
   memoryWrData, memoryRead, memoryWrite, memoryLastWrite,
-  extTriggerOut, extClockOut, armLEDnn, 
+  extTriggerOut, extClockOut, armLEDnn,
   triggerLEDnn, wrFlags, extTestMode);
 
 parameter [31:0] MEMORY_DEPTH=6;
@@ -83,15 +83,15 @@ output extTestMode;
 //
 wire [31:0] syncedInput;
 
-wire [3:0] wrtrigmask; 
-wire [3:0] wrtrigval; 
+wire [3:0] wrtrigmask;
+wire [3:0] wrtrigval;
 wire [3:0] wrtrigcfg;
 wire [3:0] wrtrigedge;
-wire wrDivider; 
-wire wrsize; 
+wire wrDivider;
+wire wrsize;
 
 wire sample_valid;
-wire [31:0] sample_data; 
+wire [31:0] sample_data;
 
 wire dly_sample_valid;
 wire [31:0] dly_sample_data;
@@ -99,13 +99,13 @@ wire [31:0] dly_sample_data;
 wire aligned_data_valid;
 wire [31:0] aligned_data;
 
-wire rle_data_valid; 
+wire rle_data_valid;
 wire [31:0] rle_data;
 
 wire arm_basic, arm_adv;
 wire arm = arm_basic | arm_adv;
 
-wire sampleClock; 
+wire sampleClock;
 
 
 //
@@ -138,7 +138,7 @@ wire extClockOut = sampleClock;
 wire resetCmd;
 wire reset = extReset | resetCmd;
 
-reset_sync reset_sync_core (clock, reset, reset_core); 
+reset_sync reset_sync_core (clock, reset, reset_core);
 reset_sync reset_sync_sample (sampleClock, reset_core, reset_sample);
 
 
@@ -161,7 +161,7 @@ wire [1:0] rle_mode = flags_reg[15:14];            // Change how RLE logic issue
 //
 // Sample external trigger signals...
 //
-wire run_basic, run_adv, run; 
+wire run_basic, run_adv, run;
 dly_signal extTriggerIn_reg (clock, extTriggerIn, sampled_extTriggerIn);
 dly_signal extTriggerOut_reg (clock, run, extTriggerOut);
 
@@ -184,7 +184,7 @@ begin
 end
 `endif
 
-always @(posedge clock) 
+always @(posedge clock)
 begin
   armLEDnn = next_armLEDnn;
   triggerLEDnn = next_triggerLEDnn;
@@ -195,12 +195,12 @@ begin
   #1;
   next_armLEDnn = armLEDnn;
   next_triggerLEDnn = triggerLEDnn;
-  if (arm) 
+  if (arm)
     begin
       next_armLEDnn = ~1'b1;
       next_triggerLEDnn = ~1'b0;
     end
-  else if (run) 
+  else if (run)
     begin
       next_armLEDnn = ~1'b0;
       next_triggerLEDnn = ~1'b1;
@@ -217,12 +217,13 @@ end
 //
 // Select between internal and external sampling clock...
 //
-BUFGMUX BUFGMUX_intex(
-  .O(sampleClock), // Clock MUX output
-  .I0(clock),      // Clock0 input
-  .I1(extClock),   // Clock1 input
-  .S(extClock_mode));
+//BUFGMUX BUFGMUX_intex(
+//  .O(sampleClock), // Clock MUX output
+//  .I0(clock),      // Clock0 input
+//  .I1(extClock),   // Clock1 input
+//  .S(extClock_mode));
 
+assign sampleClock = extClock_mode ?  extClock : clock;
 
 //
 // Decode commands & config registers...
@@ -275,14 +276,14 @@ sync sync(
 
 
 //
-// Transfer from input clock (whatever it may be) to the core clock 
+// Transfer from input clock (whatever it may be) to the core clock
 // (used for everything else, including RLE counts)...
 //
 async_fifo async_fifo(
   .wrclk(sampleClock), .wrreset(reset_sample),
   .rdclk(clock), .rdreset(reset_core),
   .space_avail(), .wrenb(1'b1), .wrdata(syncedInput),
-  .read_req(1'b1), .data_avail(), 
+  .read_req(1'b1), .data_avail(),
   .data_valid(stableValid), .data_out(stableInput));
 
 
@@ -325,19 +326,22 @@ trigger trigger(
 //
 // Evaluate advanced triggers...
 //
-trigger_adv trigger_adv(
-  .clock(clock),
-  .reset(reset_core),
-  .validIn(sample_valid),
-  .dataIn(sample_data),
-  .wrSelect(wrTrigSelect),
-  .wrChain(wrTrigChain),
-  .config_data(config_data),
-  .arm(arm_adv),
-  .finish_now(finish_now),
-  // outputs...
-  .run(run_adv),
-  .capture(capture_adv));
+
+//trigger_adv trigger_adv(
+//  .clock(clock),
+//  .reset(reset_core),
+//  .validIn(sample_valid),
+//  .dataIn(sample_data),
+//  .wrSelect(wrTrigSelect),
+//  .wrChain(wrTrigChain),
+//  .config_data(config_data),
+//  .arm(arm_adv),
+//  .finish_now(finish_now),
+//  // outputs...
+//  .run(run_adv),
+//  .capture(capture_adv));
+   assign run_adv=1'b0;
+   assign capture_adv=1'b0;
 
 wire capture = capture_basic || capture_adv;
 
@@ -369,7 +373,7 @@ data_align data_align (
 
 
 //
-// Detect duplicate data & insert RLE counts (if enabled)... 
+// Detect duplicate data & insert RLE counts (if enabled)...
 // Requires client software support to decode.
 //
 rle_enc rle_enc (
@@ -388,20 +392,20 @@ rle_enc rle_enc (
 
 
 //
-// Delay run (trigger) pulse to complensate for 
+// Delay run (trigger) pulse to complensate for
 // data_align & rle_enc delay...
 //
 pipeline_stall dly_arm_reg (
-  .clk(clock), 
-  .reset(reset_core), 
-  .datain(arm), 
+  .clk(clock),
+  .reset(reset_core),
+  .datain(arm),
   .dataout(dly_arm));
 defparam dly_arm_reg.DELAY = 2;
 
 pipeline_stall dly_run_reg (
-  .clk(clock), 
-  .reset(reset_core), 
-  .datain(run), 
+  .clk(clock),
+  .reset(reset_core),
+  .datain(run),
   .dataout(dly_run));
 defparam dly_run_reg.DELAY = 1;
 
@@ -427,4 +431,3 @@ controller controller(
   .memoryLastWrite(memoryLastWrite));
 
 endmodule
-

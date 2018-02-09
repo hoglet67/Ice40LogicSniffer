@@ -45,9 +45,9 @@ output [7:0] meta_data;
 reg [5:0] metasel, next_metasel;
 reg writeMeta; 
 
-`define ADDBYTE(cmd) meta_rom[i]=cmd; i=i+1
-`define ADDSHORT(cmd,b0) meta_rom[i]=cmd; meta_rom[i+1]=b0; i=i+2
-`define ADDLONG(cmd,b0,b1,b2,b3) meta_rom[i]=cmd; meta_rom[i+1]=b0; meta_rom[i+2]=b1; meta_rom[i+3]=b2; meta_rom[i+4]=b3; i=i+5
+`define ADDBYTE(cmd) meta_rom[i]<=cmd; i=i+1
+`define ADDSHORT(cmd,b0) meta_rom[i]<=cmd; meta_rom[i+1]<=b0; i=i+2
+`define ADDLONG(cmd,b0,b1,b2,b3) meta_rom[i]<=cmd; meta_rom[i+1]<=b0; meta_rom[i+2]<=b1; meta_rom[i+3]<=b2; meta_rom[i+4]<=b3; i=i+5
 
 
 // Create meta data ROM...
@@ -57,6 +57,8 @@ wire [7:0] meta_data = meta_rom[metasel];
 initial
 begin : meta
   integer i;
+
+   for (i=0; i<64; i=i+1) meta_rom[i]<=0; // Padding
 
   i=0;
   `ADDLONG(8'h01, "O", "p", "e", "n"); // Device name string...
@@ -78,7 +80,6 @@ begin : meta
   `ADDBYTE(0); // End of data flag
   METADATA_LEN = i;
 
-  for (i=i; i<64; i=i+1) meta_rom[i]=0; // Padding
 end
 
 
