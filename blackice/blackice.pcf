@@ -17,6 +17,7 @@
 #
 ## Onboard 100Mhz oscillator
 set_io bf_clock 129
+set_io extResetn 64
 
 # USB UART
 set_io tx  85
@@ -88,6 +89,18 @@ set_io indata[29] 17 # PMOD[37] # 12a
 set_io indata[30] 12 # PMOD[38] # 8b
 set_io indata[31] 11 # PMOD[39] # 8a
 #
+##pmod 11 lvds pairs 14 & 25
+#set_io test[0] 34 # 25b
+#set_io test[1] 33 # 25a
+#set_io test[2] 22 # 14B
+#set_io test[3] 21 # 14a
+#
+##pmod 12 lvds pairs 18 & 24
+#set_io test[4] 32 # 24b
+#set_io test[5] 31 # 24a
+#set_io test[6] 26 # 18b
+#set_io test[7] 25 # 18a
+
 ##pmod 11 lvds pairs 14 & 25
 #set_io PMOD[40] 34 # 25b
 #set_io PMOD[41] 33 # 25a

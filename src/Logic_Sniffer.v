@@ -40,6 +40,7 @@
 
 module Logic_Sniffer(
   bf_clock,
+  extResetn,
   extClockIn,
   extClockOut,
   extTriggerIn,
@@ -61,6 +62,7 @@ parameter [1:0] SPEED=2'b00;
 // Sets the speed for UART communications
 // SYSTEM_JITTER = "1000 ps"
 input bf_clock;
+input extResetn;
 input extClockIn;
 output extClockOut;
 input extTriggerIn;
@@ -85,7 +87,7 @@ parameter FREQ = 50000000;  // limited to 100M by onboard SRAM
 parameter TRXSCALE = 28;  // 100M / 28 / 115200 = 31 (5bit)  --If serial communications are not working then try adjusting this number.
 parameter RATE = 115200;  // maximum & base rate
 
-wire extReset = 1'b0;
+wire extReset = ~extResetn;
 wire [39:0] cmd;
 wire [31:0] sram_wrdata;
 wire [31:0] sram_rddata;
