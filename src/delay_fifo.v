@@ -42,7 +42,7 @@ output [WIDTH-1:0] dataOut;
 reg [(WIDTH + 1) * DELAY - 1 : 0] delay;
    
 always @(posedge clock) begin
-   delay <= {dataIn, validIn, delay[(WIDTH + 1) * DELAY - 1 : WIDTH + 1]};
+   delay <= {validIn, dataIn, delay[(WIDTH + 1) * DELAY - 1 : WIDTH + 1]};
 end
    
 assign validOut = delay[WIDTH];
