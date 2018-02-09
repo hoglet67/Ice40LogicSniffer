@@ -425,6 +425,7 @@ wire [ASYNC_FIFO_MAXDATA:0] #1 dly_wrdata = wrdata;
 wire #1 dly_rdenb = rdenb;
 wire [ASYNC_FIFO_MAXINDEX:0] #1 dly_rdptr = rdptr;
 
+(* mem2reg *)
 reg [ASYNC_FIFO_MAXDATA:0] mem[0:(1<<(ASYNC_FIFO_MAXINDEX+1))-1];
 reg [ASYNC_FIFO_MAXINDEX:0] rdptr_reg;
 assign rddata = mem[rdptr_reg];

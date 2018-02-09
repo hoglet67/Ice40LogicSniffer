@@ -71,7 +71,7 @@ reg [3:0] clkenb, next_clkenb;
 reg [`BRAM_MAXINDEX:0] address, next_address;
 reg [3:0] rdvalid, next_rdvalid;
 
-wire maxaddr = &address[`BRAM_MAXINDEX-3:0] & address[`BRAM_MAXINDEX]; // detect 0x27FF
+wire maxaddr = &address[`BRAM_MAXINDEX:0];
 wire addrzero = ~|address;
 
 
