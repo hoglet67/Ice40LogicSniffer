@@ -31,6 +31,7 @@
 //--------------------------------------------------------------------------------
 //
 
+`ifdef xxx
 (* equivalent_register_removal = "no" *)
 module outbuf (pad, clk, outsig, oe);
 inout pad;
@@ -51,7 +52,7 @@ begin
   next_sampled_oe = oe;
 end
 endmodule
-
+`endif
 
 (* equivalent_register_removal = "no" *)
 module ddr_clkout (pad, clk);
