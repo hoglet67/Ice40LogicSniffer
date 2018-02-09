@@ -75,7 +75,7 @@ begin : meta
   `ADDBYTE(0);
 
   `ADDLONG(8'h21,8'h00,8'h00,8'h40,8'h00); // Amount of sample memory (16K)
-  `ADDLONG(8'h23,8'h0B,8'hEB,8'hC2,8'h00); // Max sample rate (200Mhz)
+  `ADDLONG(8'h23,8'h05,8'hF5,8'hE1,8'h00); // Max sample rate (100Mhz)
 
   `ADDSHORT(8'h40,8'h20); // Max # of probes
   `ADDSHORT(8'h41,8'h02); // Protocol version 

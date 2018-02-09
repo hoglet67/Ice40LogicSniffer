@@ -115,7 +115,7 @@ begin
   //
   if (wrDivider)
     begin
-      next_divider = config_data[23:0];
+      next_divider = { 1'b0, config_data[23:1]}; // Half the divider to correct for 50MHz clock rather than 100MHz
       next_counter = next_divider;
       next_validOut = FALSE; // reset
     end
