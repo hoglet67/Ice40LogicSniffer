@@ -236,7 +236,7 @@ begin
   next_match = FALSE;
   next_run = FALSE;
 
-  case (state) // synthesis parallel_case
+  case (state)
     OFF :
       begin
         if (arm) next_state = ARMED;
