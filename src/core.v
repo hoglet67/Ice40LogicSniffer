@@ -77,6 +77,17 @@ output triggerLEDnn;
 output wrFlags;
 output extTestMode;
 
+wire capture_adv;
+wire capture_basic;
+wire dly_arm;
+wire dly_run;
+wire finish_now;
+wire reset_core;
+wire reset_sample;
+wire sampled_extTriggerIn;
+wire stableValid;
+wire wrTrigChain;
+wire wrTrigSelect;
 
 //
 // Interconnect...

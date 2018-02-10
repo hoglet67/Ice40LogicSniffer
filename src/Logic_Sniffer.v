@@ -87,6 +87,15 @@ parameter FREQ = 50000000;  // limited to 100M by onboard SRAM
 parameter TRXSCALE = 28;  // 100M / 28 / 115200 = 31 (5bit)  --If serial communications are not working then try adjusting this number.
 parameter RATE = 115200;  // maximum & base rate
 
+wire busy;
+wire execute;
+wire extclock;
+wire extTestMode;
+wire lastwrite;
+wire read;
+wire send;
+wire wrFlags;
+wire write;
 wire extReset = ~extResetn;
 wire [39:0] cmd;
 wire [31:0] sram_wrdata;

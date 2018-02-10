@@ -69,6 +69,9 @@ reg query_metadata, next_query_metadata;
 reg query_dataIn, next_query_dataIn; 
 reg dly_execute, next_dly_execute; 
 
+wire byteDone;
+wire sync_rx;
+wire writeMeta;
 wire [7:0] opcode;
 wire [31:0] opdata;
 assign cmd = {opdata,opcode};

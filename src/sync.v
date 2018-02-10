@@ -45,6 +45,8 @@ input demux_mode;
 input falling_edge;
 output [31:0] outdata;
 
+wire sampled_intTestMode;
+wire sampled_numberScheme;
 
 //
 // Sample config flags (for better synthesis)...

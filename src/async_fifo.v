@@ -94,6 +94,8 @@ input read_req;
 output data_avail, data_valid;
 output [ASYNC_FIFO_MAXDATA:0] data_out;
 
+wire ram_wrenb;
+wire ram_rdenb;
 wire [ASYNC_FIFO_MAXINDEX+1:0] stable_wrptr, stable_rdptr;
 wire [ASYNC_FIFO_MAXINDEX:0] ram_wraddr, ram_rdaddr;
 wire [ASYNC_FIFO_MAXDATA:0] ram_wrdata, ram_rddata;
@@ -247,7 +249,7 @@ begin
     begin
       space_avail = next_space_avail;
       wrptr = next_wrptr;
-      // synthesis translate_off
+`ifdef SIMULATION
       if (data_valid)
 	begin
           #1; 
@@ -257,7 +259,7 @@ begin
               $finish;
             end
 	end
-      // synthesis translate_on
+`endif
     end
 end
 
