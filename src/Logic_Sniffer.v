@@ -38,6 +38,8 @@
 
 //`define COMM_TYPE_SPI 1               // comment out for UART mode
 
+// `define INTERNAL_PATTERN
+
 module Logic_Sniffer(
   bf_clock,
   extResetn,
@@ -56,8 +58,6 @@ module Logic_Sniffer(
   triggerLEDnn);
 
 parameter [31:0] MEMORY_DEPTH=6;
-parameter [31:0] CLOCK_SPEED=50;
-parameter [1:0] SPEED=2'b00;
 
 // Sets the speed for UART communications
 // SYSTEM_JITTER = "1000 ps"
@@ -115,6 +115,7 @@ reg clock = 1'b0;
 always @(posedge bf_clock)
   clock = ~clock;
 
+
 // Output dataReady to PIC (so it'll enable our SPI CS#)...
 dly_signal dataReady_reg (clock, busy, dataReady);
 
@@ -122,12 +123,11 @@ dly_signal dataReady_reg (clock, busy, dataReady);
 // Use DDR output buffer to isolate clock & avoid skew penalty...
 ddr_clkout extclock_pad (.pad(extClockOut), .clk(extclock));
 
-
-
 //
 // Configure the probe pins...
 //
-reg [10:0] test_counter, next_test_counter;
+reg [15:0] test_counter = 0;
+reg [15:0] next_test_counter;
 always @ (posedge clock)
 begin
   test_counter = next_test_counter;
@@ -138,15 +138,17 @@ begin
   next_test_counter = test_counter+1'b1;
 end
 
-wire [15:0] test_pattern = {
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4],
-    test_counter[10], test_counter[4]};
+wire [15:0] test_pattern = test_counter;
+
+//wire [15:0] test_pattern = {
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4],
+//    test_counter[10], test_counter[4]};
 
 //outbuf io_indata31 (.pad(indata[31]), .clk(clock), .outsig(test_pattern[15]), .oe(extTestMode));
 //outbuf io_indata30 (.pad(indata[30]), .clk(clock), .outsig(test_pattern[14]), .oe(extTestMode));
@@ -214,7 +216,11 @@ core #(.MEMORY_DEPTH(MEMORY_DEPTH)) core (
   .opcode(opcode),
   .config_data(config_data),
   .execute(execute),
+`ifdef INTERNAL_PATTERN
+  .indata({test_pattern , test_pattern}),
+`else
   .indata(indata),
+`endif
   .outputBusy(busy),
   // outputs...
   .sampleReady50(),
