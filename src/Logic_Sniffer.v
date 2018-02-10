@@ -121,14 +121,14 @@ dly_signal dataReady_reg (clock, busy, dataReady);
 
 
 // Use DDR output buffer to isolate clock & avoid skew penalty...
-ddr_clkout extclock_pad (.pad(extClockOut), .clk(extclock));
+ddr_clkout extclock_pad (.pad(extClockOut), .clk(1'b0));
 
 //
 // Configure the probe pins...
 //
 reg [15:0] test_counter = 0;
 reg [15:0] next_test_counter;
-always @ (posedge clock)
+always @ (posedge extclock)
 begin
   test_counter = next_test_counter;
 end

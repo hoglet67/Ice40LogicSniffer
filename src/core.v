@@ -138,7 +138,7 @@ end
 
 `else
 
-wire extClockOut = 1'b0;
+wire extClockOut = sampleClock;
 
 `endif
 
