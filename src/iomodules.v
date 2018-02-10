@@ -59,7 +59,7 @@ module ddr_clkout (pad, clk);
 input clk;
 output pad;
 //ODDR2 ddrout (.Q(pad), .D0(1'b0), .D1(1'b1), .C0(!clk), .C1(clk));
-assign pad=clock;
+assign pad=clk;
 endmodule
 
 
