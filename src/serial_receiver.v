@@ -2,7 +2,7 @@
 // spi_receiver.v
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -42,7 +42,7 @@
 `timescale 1ns/100ps
 
 module serial_receiver(
-  clock, extReset, 
+  clock, extReset,
   rx, transmitting,
   // outputs...
   op, data, execute);
@@ -58,7 +58,7 @@ output [7:0] op;
 output [31:0] data;
 output execute;
 
-parameter 
+parameter
   READOPCODE = 1'h0,
   READLONG = 1'h1;
 
@@ -89,7 +89,7 @@ assign data = databuf;
 //
 // Receive UART - MK
 //
-always @(posedge clock or posedge extReset) 
+always @(posedge clock or posedge extReset)
 begin
   if (extReset) begin
     rx_state = RX_IDLE;
@@ -97,7 +97,7 @@ begin
     rxByte = 8'b0;
     byteready = 1'b0;
     rx_count = 10'd0;
-  end else begin 
+  end else begin
     rx_state = next_rx_state;
     bitcount = next_bitcount;
     rxByte = next_rxByte;
@@ -157,7 +157,7 @@ end
 //
 // Command tracking...
 //
-always @(posedge clock or posedge extReset) 
+always @(posedge clock or posedge extReset)
 begin
   if (extReset)
     state = READOPCODE;
@@ -165,7 +165,7 @@ begin
 end
 
 initial databuf = 0;
-always @(posedge clock) 
+always @(posedge clock)
 begin
   bytecount = next_bytecount;
   opcode = next_opcode;
@@ -181,7 +181,7 @@ begin
   next_opcode = opcode;
   next_databuf = databuf;
   next_execute = 1'b0;
-  
+
   case (state)
     READOPCODE : // receive byte
       begin
@@ -215,4 +215,3 @@ begin
   endcase
 end
 endmodule
-

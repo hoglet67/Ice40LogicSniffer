@@ -36,7 +36,7 @@
 
 `timescale 1ns/100ps
 
-//`define COMM_TYPE_SPI 1		// comment out for UART mode
+//`define COMM_TYPE_SPI 1               // comment out for UART mode
 
 module Logic_Sniffer(
   bf_clock,

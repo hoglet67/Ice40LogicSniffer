@@ -46,7 +46,7 @@ endmodule
 
 
 //
-// Two back to back flop's.  A full synchronizer (which XISE 
+// Two back to back flop's.  A full synchronizer (which XISE
 // will convert into a nice shift register using a single LUT)
 // to sample asynchronous signals safely.
 //
@@ -82,5 +82,3 @@ begin
   next_reset_reg = {reset_reg,1'b0};
 end
 endmodule
-
-

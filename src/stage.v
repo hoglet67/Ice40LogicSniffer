@@ -2,7 +2,7 @@
 // stage.vhd
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -41,7 +41,7 @@
 // can easily be software compensated. (By adjusting the before/after ratio.)
 //--------------------------------------------------------------------------------
 //
-// 12/29/2010 - Ian Davis (IED) - Verilog version, changed to use LUT based 
+// 12/29/2010 - Ian Davis (IED) - Verilog version, changed to use LUT based
 //    masked comparisons, and other cleanups created - mygizmos.org
 //
 // 05/22/2014 - Magnus Karlsson - Added edge triggers, removerd LUT-based comparisons
@@ -51,7 +51,7 @@
 
 module stage(
   clock, reset, dataIn, validIn,
-  wrMask, wrValue, wrEdge, 
+  wrMask, wrValue, wrEdge,
   wrConfig, config_data,
   arm, demux_mode, level,
   // outputs...
@@ -62,12 +62,12 @@ parameter FALSE = 1'b0;
 
 input clock, reset;
 input validIn;
-input [31:0] dataIn;		// Channel data...
-input wrMask;			// Write trigger mask register
-input wrValue;		// Write trigger value register
-input wrEdge;			// Write trigger edge register
-input wrConfig;			// Write the trigger config register
-input [31:0] config_data;	// Data to write into trigger config regs
+input [31:0] dataIn;            // Channel data...
+input wrMask;                   // Write trigger mask register
+input wrValue;          // Write trigger value register
+input wrEdge;                   // Write trigger edge register
+input wrConfig;                 // Write the trigger config register
+input [31:0] config_data;       // Data to write into trigger config regs
 input arm;
 input demux_mode;
 input [1:0] level;
@@ -84,7 +84,7 @@ reg [31:0] maskRegister, next_maskRegister;
 reg [31:0] valueRegister, next_valueRegister;
 reg [31:0] edgeRegister, next_edgeRegister;
 reg [27:0] configRegister, next_configRegister;
-reg [15:0] counter, next_counter; 
+reg [15:0] counter, next_counter;
 
 reg [31:0] shiftRegister, next_shiftRegister;
 reg match32Register, next_match32Register;
@@ -154,7 +154,7 @@ generate
       assign bitMatch[i] = ~maskRegister[i] | ((edgeRegister[i] & ~cfgSerial) ? edgeMatch[i] : (~testValue[i] ^ valueRegister[i]));
     end
 endgenerate
-    
+
 wire matchL16 = &bitMatch[15:0];
 wire matchH16 = &bitMatch[31:16];
 
@@ -162,14 +162,14 @@ wire matchH16 = &bitMatch[31:16];
 //
 // In demux mode only one half must match, in normal mode both words must match...
 //
-always @(posedge clock) 
+always @(posedge clock)
 begin
   match32Register <= next_match32Register;
 end
 
 always @*
 begin
-  if (demux_mode) 
+  if (demux_mode)
     next_match32Register = matchL16 | matchH16;
   else next_match32Register = matchL16 & matchH16;
 end
@@ -184,7 +184,7 @@ wire serialChannelH16 = dataIn[{1'b1,cfgChannel[3:0]}];
 
 //
 // Shift in bit from selected channel whenever dataIn is ready...
-always @(posedge clock) 
+always @(posedge clock)
 begin
   shiftRegister <= next_shiftRegister;
 end
@@ -210,16 +210,16 @@ parameter [1:0]
 reg [1:0] state, next_state;
 
 initial state = OFF;
-always @(posedge clock or posedge reset) 
+always @(posedge clock or posedge reset)
 begin
-  if (reset) 
+  if (reset)
     begin
       state = OFF;
       counter = 0;
       match = FALSE;
       run = FALSE;
     end
-  else 
+  else
     begin
       state = next_state;
       counter = next_counter;
@@ -237,33 +237,31 @@ begin
   next_run = FALSE;
 
   case (state) // synthesis parallel_case
-    OFF : 
+    OFF :
       begin
         if (arm) next_state = ARMED;
       end
 
-    ARMED : 
+    ARMED :
       begin
         next_counter = cfgDelay;
-        if (match32Register && (level >= cfgLevel)) 
+        if (match32Register && (level >= cfgLevel))
           next_state = MATCHED;
       end
 
-    MATCHED : 
+    MATCHED :
       begin
         if (validIn)
-	  begin
+          begin
             next_counter = counter-1'b1;
             if (~|counter)
-	      begin
+              begin
                 next_run = cfgStart;
                 next_match = ~cfgStart;
                 next_state = OFF;
               end
-	  end
+          end
       end
   endcase
 end
 endmodule
-
-

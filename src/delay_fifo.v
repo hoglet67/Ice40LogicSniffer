@@ -1,9 +1,8 @@
-
 //--------------------------------------------------------------------------------
 //
 // delay_fifo.v
 // Copyright (C) 2011 Ian Davis
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -20,8 +19,8 @@
 //
 //--------------------------------------------------------------------------------
 //
-// Simple delay FIFO.   Input data delayed by parameter "DELAY" numbers of 
-// clocks (1 to 16).  Uses shift register LUT's, so takes only one LUT-RAM 
+// Simple delay FIFO.   Input data delayed by parameter "DELAY" numbers of
+// clocks (1 to 16).  Uses shift register LUT's, so takes only one LUT-RAM
 // per bit regardless of delay.
 //
 module delay_fifo (
@@ -30,7 +29,7 @@ module delay_fifo (
   // outputs
   validOut, dataOut);
 
-parameter DELAY = 3;	// 1 to 16
+parameter DELAY = 3;    // 1 to 16
 parameter WIDTH = 32;
 
 input clock, reset;
@@ -40,13 +39,12 @@ output validOut;
 output [WIDTH-1:0] dataOut;
 
 reg [(WIDTH + 1) * DELAY - 1 : 0] delay;
-   
+
 always @(posedge clock) begin
    delay <= {validIn, dataIn, delay[(WIDTH + 1) * DELAY - 1 : WIDTH + 1]};
 end
-   
+
 assign validOut = delay[WIDTH];
 assign dataOut = delay[WIDTH - 1 : 0];
 
 endmodule
-

@@ -54,11 +54,11 @@ module core(
 parameter [31:0] MEMORY_DEPTH=6;
 
 input clock;
-input extReset;			// External reset
-input [7:0] opcode;		// Configuration command from serial/SPI interface
+input extReset;                 // External reset
+input [7:0] opcode;             // Configuration command from serial/SPI interface
 input [31:0] config_data;
-input execute;			// opcode & config_data valid
-input [31:0] indata;		// Input sample data
+input execute;                  // opcode & config_data valid
+input [31:0] indata;            // Input sample data
 input extClock;
 input outputBusy;
 input extTriggerIn;

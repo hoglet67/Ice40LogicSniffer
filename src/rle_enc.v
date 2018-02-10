@@ -2,7 +2,7 @@
 // rle_enc.vhd
 //
 // Copyright (C) 2007 Jonas Diemer
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -45,10 +45,10 @@
 `timescale 1ns/100ps
 
 module rle_enc(
-  clock, reset, 
-  enable, arm, 
-  rle_mode, demux_mode, disabledGroups, 
-  dataIn, validIn, 
+  clock, reset,
+  enable, arm,
+  rle_mode, demux_mode, disabledGroups,
+  dataIn, validIn,
   // outputs...
   dataOut, validOut);
 
@@ -79,9 +79,9 @@ reg last_valid, next_last_valid;
 reg [31:0] dataOut, next_dataOut;
 reg validOut, next_validOut;
 
-reg [30:0] count, next_count;		// # of times seen same input data
-reg [8:0] fieldcount, next_fieldcount;	// # times output back-to-back <rle-counts> with no <value>
-reg [1:0] track, next_track;		// Track if at start of rle-coutn sequence.
+reg [30:0] count, next_count;           // # of times seen same input data
+reg [8:0] fieldcount, next_fieldcount;  // # times output back-to-back <rle-counts> with no <value>
+reg [1:0] track, next_track;            // Track if at start of rle-coutn sequence.
 
 wire [30:0] inc_count = count+1'b1;
 wire count_zero = ~|count;
@@ -140,7 +140,7 @@ begin
       active = 0;
       mask_flag = 0;
     end
-  else 
+  else
     begin
       active = next_active;
       mask_flag = next_mask_flag;
@@ -165,7 +165,7 @@ begin
 
   next_dataOut = (mask_flag) ? masked_dataIn : dataIn;
   next_validOut = validIn;
-  next_last_data = (validIn) ? masked_dataIn : last_data; 
+  next_last_data = (validIn) ? masked_dataIn : last_data;
   next_last_valid = FALSE;
   next_count = count & {31{active}};
   next_fieldcount = fieldcount & {9{active}};
@@ -193,7 +193,7 @@ begin
       if (validIn && last_valid)
         if (!enable || mismatch || demux_mismatch || count_full) // if mismatch, or counter full, then output count (if count>1)...
           begin
-	    next_active = enable;
+            next_active = enable;
             next_validOut = TRUE;
             next_dataOut = {RLE_COUNT,count};
             case (mode)
@@ -203,25 +203,24 @@ begin
             endcase
             if (!count_gt_one) next_dataOut = last_data;
 
-	    next_fieldcount = fieldcount+1'b1; // inc # times output rle-counts
+            next_fieldcount = fieldcount+1'b1; // inc # times output rle-counts
 
-	    // If mismatch, or rle_mode demands it, set count=0 (which will force reissue of a <value>).
-	    // Otherwise, set to 1 to avoid thre redundant <value> from being output.
-	    next_count = (mismatch || demux_mismatch || ~rle_mode[1] || ~rle_mode[0] & fieldcount[8]) ? 0 : 1;
-	    next_track = next_count[1:0];
+            // If mismatch, or rle_mode demands it, set count=0 (which will force reissue of a <value>).
+            // Otherwise, set to 1 to avoid thre redundant <value> from being output.
+            next_count = (mismatch || demux_mismatch || ~rle_mode[1] || ~rle_mode[0] & fieldcount[8]) ? 0 : 1;
+            next_track = next_count[1:0];
           end
         else // match && !count_full
-	  begin
+          begin
             next_count = inc_count;
-	    if (count_zero) // write initial data if count zero
-	      begin
-		next_fieldcount = 0;
-		next_validOut = TRUE;
-	      end
-	    if (rle_repeat_mode && count_zero) next_count = 2;
-	    next_track = {|track,1'b1};
-	  end
+            if (count_zero) // write initial data if count zero
+              begin
+                next_fieldcount = 0;
+                next_validOut = TRUE;
+              end
+            if (rle_repeat_mode && count_zero) next_count = 2;
+            next_track = {|track,1'b1};
+          end
     end
 end
 endmodule
-

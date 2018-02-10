@@ -2,7 +2,7 @@
 // sync.vhd
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -30,7 +30,7 @@
 //              Revised to carefully avoid any cross-connections between indata
 //              bits from the I/O's until a couple flops have sampled everything.
 //              Also moved testcount & numberScheme selects from top level here.
-// 
+//
 
 `timescale 1ns/100ps
 
@@ -60,11 +60,11 @@ dly_signal sampled_numberScheme_reg (clock, numberScheme, sampled_numberScheme);
 //
 wire [31:0] sync_indata, sync_indata180;
 ddr_inbuf inbuf (clock, indata, sync_indata, sync_indata180);
- 
+
 
 
 //
-// Internal test mode.  Put aa 8-bit test pattern munged in 
+// Internal test mode.  Put aa 8-bit test pattern munged in
 // different ways onto the 32-bit input...
 //
 reg [7:0] testcount, next_testcount;
@@ -97,21 +97,21 @@ wire [31:0] itm_indata180 = (sampled_intTestMode) ? ~itm_count : sync_indata180;
 
 //
 // Instantiate demux.  Special case for number scheme mode, since demux upper bits we have
-// the final full 32-bit shouldn't be swapped.  So it's preswapped here, to "undo" the final 
+// the final full 32-bit shouldn't be swapped.  So it's preswapped here, to "undo" the final
 // numberscheme on output...
 //
-wire [31:0] demuxL_indata; 
+wire [31:0] demuxL_indata;
 demux demuxL (
   .clock(clock),
-  .indata(itm_indata[15:0]), 
-  .indata180(itm_indata180[15:0]), 
+  .indata(itm_indata[15:0]),
+  .indata180(itm_indata180[15:0]),
   .outdata(demuxL_indata));
 
-wire [31:0] demuxH_indata; 
+wire [31:0] demuxH_indata;
 demux demuxH (
   .clock(clock),
-  .indata(itm_indata[31:16]), 
-  .indata180(itm_indata180[31:16]), 
+  .indata(itm_indata[31:16]),
+  .indata180(itm_indata180[31:16]),
   .outdata(demuxH_indata));
 
 wire [31:0] demux_indata = (sampled_numberScheme) ? {demuxH_indata[15:0],demuxH_indata[31:16]} : demuxL_indata;
@@ -120,9 +120,9 @@ wire [31:0] demux_indata = (sampled_numberScheme) ? {demuxH_indata[15:0],demuxH_
 //
 // Instantiate noise filter...
 //
-wire [31:0] filtered_indata; 
+wire [31:0] filtered_indata;
 filter filter (
-  .clock(clock), 
+  .clock(clock),
   .indata(itm_indata),
   .indata180(itm_indata180),
   .outdata(filtered_indata));
@@ -135,7 +135,7 @@ reg [1:0] select, next_select;
 reg [31:0] selectdata, next_selectdata;
 reg [31:0] outdata;
 
-always @(posedge clock) 
+always @(posedge clock)
 begin
   select = next_select;
   selectdata = next_selectdata;
@@ -144,14 +144,14 @@ end
 always @*
 begin
   #1;
-  if (demux_mode)	   // IED - better starting point for synth tools...
+  if (demux_mode)          // IED - better starting point for synth tools...
     next_select = 2'b10;
   else if (filter_mode)
     next_select = 2'b11;
   else next_select = {1'b0,falling_edge};
 
   // 4:1 mux...
-  case (select) 
+  case (select)
     2'b00 : next_selectdata = itm_indata;
     2'b01 : next_selectdata = itm_indata180;
     2'b10 : next_selectdata = demux_indata;
@@ -164,4 +164,3 @@ begin
   outdata = (sampled_numberScheme) ? {selectdata[15:0],selectdata[31:16]} : selectdata;
 end
 endmodule
-

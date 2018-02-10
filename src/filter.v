@@ -2,7 +2,7 @@
 // filter.vhd
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -29,7 +29,7 @@
 //--------------------------------------------------------------------------------
 //
 // 12/29/2010 - Verilog Version + cleanups created by Ian Davis - mygizmos.org
-// 
+//
 
 `timescale 1ns/100ps
 
@@ -39,11 +39,11 @@ input [31:0] indata;
 input [31:0] indata180;
 output [31:0] outdata;
 
-reg [31:0] dly_indata, next_dly_indata; 
-reg [31:0] dly_indata180, next_dly_indata180; 
+reg [31:0] dly_indata, next_dly_indata;
+reg [31:0] dly_indata180, next_dly_indata180;
 reg [31:0] outdata, next_outdata;
 
-always @(posedge clock) 
+always @(posedge clock)
 begin
   outdata = next_outdata;
   dly_indata = next_dly_indata;
@@ -58,4 +58,3 @@ begin
   next_dly_indata180 = indata180;
 end
 endmodule
-

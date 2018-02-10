@@ -2,7 +2,7 @@
 // flags.vhd
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -26,7 +26,7 @@
 //--------------------------------------------------------------------------------
 //
 // 12/29/2010 - Verilog Version + cleanups created by Ian Davis - mygizmos.org
-// 
+//
 
 `timescale 1ns/100ps
 
@@ -48,7 +48,7 @@ reg [31:0] flags_reg, next_flags_reg;
 // Write flags register...
 //
 initial flags_reg = 0;
-always @(posedge clock) 
+always @(posedge clock)
 begin
   flags_reg = next_flags_reg;
 end
@@ -60,4 +60,3 @@ begin
   if (finish_now) next_flags_reg[8] = 1'b0;
 end
 endmodule
-

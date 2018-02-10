@@ -7,15 +7,14 @@ input [7:0] DIN;
 output reg [7:0] DOUT;
 
    reg [7:0] mem [4095:0];
-           
+
    always @(posedge CLK) begin
         if (EN) begin
            if (WE) begin
-              mem[ADDR] <= DIN;              
+              mem[ADDR] <= DIN;
            end
-           DOUT <= mem[ADDR];           
-        end      
+           DOUT <= mem[ADDR];
+        end
    end
-   
-endmodule
 
+endmodule

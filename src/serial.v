@@ -2,7 +2,7 @@
 // spi_slave.v
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -33,7 +33,7 @@
 `timescale 1ns/100ps
 
 module serial(
-  clock, extReset, 
+  clock, extReset,
   rx, dataIn,
   send, send_data, send_valid,
   // outputs
@@ -64,10 +64,10 @@ wire tx;
 //
 // Registers...
 //
-reg query_id, next_query_id; 
+reg query_id, next_query_id;
 reg query_metadata, next_query_metadata;
-reg query_dataIn, next_query_dataIn; 
-reg dly_execute, next_dly_execute; 
+reg query_dataIn, next_query_dataIn;
+reg dly_execute, next_dly_execute;
 
 wire byteDone;
 wire sync_rx;
@@ -105,7 +105,7 @@ serial_transmitter #(.FREQ(FREQ), .RATE(RATE)) serial_transmitter(
   .clock(clock), .extReset(extReset),
   .send(send), .send_data(send_data), .send_valid(send_valid),
   .writeMeta(writeMeta), .meta_data(meta_data),
-  .query_id(query_id), 
+  .query_id(query_id),
   .query_dataIn(query_dataIn), .dataIn(dataIn),
   .tx(tx), .busy(busy), .byteDone(byteDone));
 
@@ -113,7 +113,7 @@ serial_transmitter #(.FREQ(FREQ), .RATE(RATE)) serial_transmitter(
 //
 // Process special commands not handled by core decoder...
 //
-always @(posedge clock) 
+always @(posedge clock)
 begin
   query_id = next_query_id;
   query_metadata = next_query_metadata;
@@ -124,7 +124,7 @@ end
 always @*
 begin
   #1;
-  next_query_id = 1'b0; 
+  next_query_id = 1'b0;
   next_query_metadata = 1'b0;
   next_query_dataIn = 1'b0;
   next_dly_execute = execute;
@@ -132,7 +132,7 @@ begin
   if (!dly_execute && execute)
     case (opcode)
       8'h02 : next_query_id = 1'b1;
-      8'h04 : next_query_metadata = 1'b1; 
+      8'h04 : next_query_metadata = 1'b1;
       8'h06 : next_query_dataIn = 1'b1;
     endcase
 end

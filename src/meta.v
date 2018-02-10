@@ -2,7 +2,7 @@
 // meta.v
 //
 // Copyright (C) 2011 Ian Davis
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -19,7 +19,7 @@
 //
 //--------------------------------------------------------------------------------
 //
-// Details: 
+// Details:
 //   http://www.dangerousprototypes.com/ols
 //   http://www.gadgetfactory.net/gf/project/butterflylogic
 //   http://www.mygizmos.org/ols
@@ -30,7 +30,7 @@
 
 module meta_handler(
   clock, extReset,
-  query_metadata, xmit_idle, 
+  query_metadata, xmit_idle,
   // outputs...
   writeMeta, meta_data);
 
@@ -43,7 +43,7 @@ output writeMeta;
 output [7:0] meta_data;
 
 reg [5:0] metasel, next_metasel;
-reg writeMeta; 
+reg writeMeta;
 
 `define ADDBYTE(cmd) meta_rom[i]<=cmd; i=i+1
 `define ADDSHORT(cmd,b0) meta_rom[i]<=cmd; meta_rom[i+1]<=b0; i=i+2
@@ -78,7 +78,7 @@ begin : meta
   `ADDLONG(8'h23,8'h05,8'hF5,8'hE1,8'h00); // Max sample rate (100Mhz)
 
   `ADDSHORT(8'h40,8'h20); // Max # of probes
-  `ADDSHORT(8'h41,8'h02); // Protocol version 
+  `ADDSHORT(8'h41,8'h02); // Protocol version
 
   `ADDBYTE(0); // End of data flag
   METADATA_LEN = i;
@@ -93,14 +93,14 @@ parameter [1:0] IDLE = 0, METASEND = 1, METAPOLL = 2;
 reg [1:0] state, next_state;
 
 initial state = IDLE;
-always @(posedge clock or posedge extReset) 
+always @(posedge clock or posedge extReset)
 begin
-  if (extReset) 
+  if (extReset)
     begin
       state = IDLE;
       metasel = 3'h0;
-    end 
-  else 
+    end
+  else
     begin
       state = next_state;
       metasel = next_metasel;
@@ -115,27 +115,26 @@ begin
 
   writeMeta = 1'b0;
   case (state)
-    IDLE : 
+    IDLE :
       begin
-	next_metasel = 0;
-	next_state = (query_metadata && xmit_idle) ? METASEND : IDLE;
+        next_metasel = 0;
+        next_state = (query_metadata && xmit_idle) ? METASEND : IDLE;
       end
 
     METASEND : // output contents of META data rom - IED
       begin
         writeMeta = 1'b1;
-	next_metasel = metasel+1'b1;
-	next_state = METAPOLL;
+        next_metasel = metasel+1'b1;
+        next_state = METAPOLL;
       end
 
     METAPOLL :
       begin
         if (xmit_idle)
-	  next_state = (metasel==METADATA_LEN) ? IDLE : METASEND;
+          next_state = (metasel==METADATA_LEN) ? IDLE : METASEND;
       end
 
     default : next_state = IDLE;
   endcase
 end
 endmodule
-

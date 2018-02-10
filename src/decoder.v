@@ -2,7 +2,7 @@
 // decoder.vhd
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -32,7 +32,7 @@
 //--------------------------------------------------------------------------------
 //
 // 12/29/2010 - Verilog Version + cleanups created by Ian Davis - mygizmos.org
-// 
+//
 
 `timescale 1ns/100ps
 
@@ -86,7 +86,7 @@ reg dly_execute, next_dly_execute;
 // Control logic.  On rising edge of "execute" signal,
 // parse "opcode" and make things happen...
 //
-always @(posedge clock) 
+always @(posedge clock)
 begin
   resetCmd = next_resetCmd;
   arm_basic = next_arm_basic;

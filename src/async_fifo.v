@@ -2,7 +2,7 @@
 //
 // async_fifo.v
 // Copyright (C) 2011 Ian Davis
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -19,11 +19,11 @@
 //
 //--------------------------------------------------------------------------------
 //
-// Details: 
+// Details:
 //   http://www.dangerousprototypes.com/ols
 //   http://www.gadgetfactory.net/gf/project/butterflylogic
 //   http://www.mygizmos.org/ols
-// 
+//
 // An asynchronous FIFO.  Defaults to (16 words)x(32 bit)
 //
 // Accepts data written in one clock domain, writes the data to a FIFO ram,
@@ -34,14 +34,14 @@
 // bits "arrived" out of phase.
 //
 // In detail, the steps are:
-//  1) Write data to a dual-port RAM in the source clock domain.   
+//  1) Write data to a dual-port RAM in the source clock domain.
 //  2) Update fifo write pointer.
-//  3) Synchronize a gray-encoded version of the write pointer in the 
-//       destination clock domain.   
+//  3) Synchronize a gray-encoded version of the write pointer in the
+//       destination clock domain.
 //  4) Read data from the dual-port RAM in the destiantion clock.
 //  5) Update the read pointer.
-//  6) Synchronize a gray-encoded version of the read pointer back 
-//       to the source clock domain.   
+//  6) Synchronize a gray-encoded version of the read pointer back
+//       to the source clock domain.
 //  7) The loop is now closed
 //
 // Note the write clock always has a laggy version of the read pointer.
@@ -54,14 +54,14 @@
 //
 // Notes on Synchronizers...
 //
-// Synchronizing simply means using two or more back-to-back flops to 
+// Synchronizing simply means using two or more back-to-back flops to
 // move a signal from one clock domain to another.
 //
-// Why at least two?   Because theoretically a flop can become metastable 
+// Why at least two?   Because theoretically a flop can become metastable
 // (not in 0 or 1 state) if its data input twitches at just the wrong moment
 // too close to the clock.  A worst-case setup//hold timing violation.
 //
-// A flop eventually recovers, but the speed at which it does so depends 
+// A flop eventually recovers, but the speed at which it does so depends
 // in large part on its output capacitive load.  A second flop minmizes the
 // load & gives a near 100% chance (99.99999%) of capturing stable data.
 // For very sensitive applications, you increase the number of flops, or use
@@ -74,12 +74,12 @@ module async_fifo (
   // write path
   space_avail, wrenb, wrdata,
   // read path
-  read_req, data_avail, 
+  read_req, data_avail,
   data_valid, data_out);
 
 parameter ASYNC_FIFO_MAXINDEX = 3;
 parameter ASYNC_FIFO_MAXDATA = 31;
-parameter ASYNC_FIFO_FULLTHRESHOLD = 4;		// full when only 4 words remain
+parameter ASYNC_FIFO_FULLTHRESHOLD = 4;         // full when only 4 words remain
 
 input wrclk, wrreset;
 input rdclk, rdreset;
@@ -104,8 +104,8 @@ wire [ASYNC_FIFO_MAXDATA:0] ram_wrdata, ram_rddata;
 // Instantiate RAM...
 //
 async_fifo_ram ram (
-  wrclk, rdclk, 
-  ram_wrenb, ram_wraddr, ram_wrdata, 
+  wrclk, rdclk,
+  ram_wrenb, ram_wraddr, ram_wrdata,
   ram_rdenb, ram_rdaddr, ram_rddata);
 
 defparam ram.ASYNC_FIFO_MAXINDEX = ASYNC_FIFO_MAXINDEX;
@@ -116,7 +116,7 @@ defparam ram.ASYNC_FIFO_MAXDATA = ASYNC_FIFO_MAXDATA;
 // Instantiate write path...
 //
 async_fifo_wrpath wrpath (
-  wrclk, wrreset, 
+  wrclk, wrreset,
   space_avail, wrenb, wrdata,
   ram_wrenb, ram_wraddr, ram_wrdata,
   stable_wrptr, stable_rdptr);
@@ -130,8 +130,8 @@ defparam wrpath.ASYNC_FIFO_FULLTHRESHOLD = ASYNC_FIFO_FULLTHRESHOLD;
 // Instantiate read path...
 //
 async_fifo_rdpath rdpath (
-  rdclk, rdreset, 
-  read_req, data_avail, 
+  rdclk, rdreset,
+  read_req, data_avail,
   data_valid, data_out,
   ram_rdenb, ram_rdaddr, ram_rddata,
   stable_wrptr, stable_rdptr);
@@ -148,7 +148,7 @@ endmodule
 //  Generic ASYNC fifo.  Write path...
 //
 module async_fifo_wrpath (
-  clk, reset, 
+  clk, reset,
   space_avail, data_valid, wrdata,
   ram_wrenb, ram_wraddr, ram_wrdata,
   stable_wrptr, stable_rdptr);
@@ -203,14 +203,14 @@ wire [ASYNC_FIFO_MAXDATA:0] ram_wrdata = wrdata;
 //
 // Sample stable singals...
 //
-initial 
-begin 
+initial
+begin
   stable_wrptr = 0;
   rdptr = 0;
 end
 always @ (posedge clk or posedge reset)
 begin
-  if (reset) 
+  if (reset)
     begin
       stable_wrptr = 0;
       rdptr = 0;
@@ -233,14 +233,14 @@ end
 //
 // Control logic...
 //
-initial 
-begin 
+initial
+begin
   space_avail = 0;
   wrptr = 0;
 end
 always @ (posedge clk or posedge reset)
 begin
-  if (reset) 
+  if (reset)
     begin
       space_avail = 1'b1;
       wrptr = 0;
@@ -251,14 +251,14 @@ begin
       wrptr = next_wrptr;
 `ifdef SIMULATION
       if (data_valid)
-	begin
-          #1; 
-	  if (fifo_depth >= (1<<(ASYNC_FIFO_MAXINDEX+1)))
+        begin
+          #1;
+          if (fifo_depth >= (1<<(ASYNC_FIFO_MAXINDEX+1)))
             begin
               $display ("%t: FIFO OVERFLOW!",$realtime);
               $finish;
             end
-	end
+        end
 `endif
     end
 end
@@ -279,8 +279,8 @@ endmodule
 //  Read path...
 //
 module async_fifo_rdpath (
-  clk, reset, 
-  read_req, data_avail, 
+  clk, reset,
+  read_req, data_avail,
   data_valid, data_out,
   ram_rdenb, ram_rdaddr, ram_rddata,
   stable_wrptr, stable_rdptr);
@@ -361,7 +361,7 @@ end
 //
 // Control logic...
 //
-initial 
+initial
 begin
   rdptr = 0;
   data_avail = 1'b0;
@@ -369,7 +369,7 @@ begin
 end
 always @ (posedge clk or posedge reset)
 begin
-  if (reset) 
+  if (reset)
     begin
       rdptr = 0;
       data_avail = 1'b0;

@@ -2,7 +2,7 @@
 //
 // data_align.v
 // Copyright (C) 2011 Ian Davis
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -19,7 +19,7 @@
 //
 //--------------------------------------------------------------------------------
 //
-// Details: 
+// Details:
 //   http://www.dangerousprototypes.com/ols
 //   http://www.gadgetfactory.net/gf/project/butterflylogic
 //   http://www.mygizmos.org/ols
@@ -27,10 +27,10 @@
 // This module takes the sampled input, and shifts/compacts the data to
 // eliminate any disabled groups. ie:
 //
-//   Channels 0,1,2 are disabled:  
+//   Channels 0,1,2 are disabled:
 //     dataOut[7:0] = channel3     (dataIn[31:24])
 //
-//   Channels 1,2 are disabled:    
+//   Channels 1,2 are disabled:
 //     dataOut[15:0] = {channel3,channel0}   (dataIn[31:24],dataIn[7:0])
 //
 // Compacting the data like this allows for easier RLE & filling of SRAM.
@@ -40,8 +40,8 @@
 `timescale 1ns/100ps
 
 module data_align(
-  clock, disabledGroups, 
-  validIn, dataIn, 
+  clock, disabledGroups,
+  validIn, dataIn,
   // outputs...
   validOut, dataOut);
 
@@ -93,7 +93,7 @@ begin
 end
 
 
-always @(posedge clock) 
+always @(posedge clock)
 begin
   insel0 = next_insel0;
   insel1 = next_insel1;
@@ -115,7 +115,7 @@ begin
   //
   // Each "insel" signal controls the select for an output mux.
   //
-  // ie: insel0 controls what is -output- on bits[7:0].   
+  // ie: insel0 controls what is -output- on bits[7:0].
   //     Thus, if insel0 equal 2, dataOut[7:0] = dataIn[23:16]
   //
   next_insel0 = 2'h0;
@@ -142,4 +142,3 @@ begin
   endcase
 end
 endmodule
-

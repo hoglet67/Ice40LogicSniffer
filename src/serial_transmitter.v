@@ -2,7 +2,7 @@
 // transmitter.v
 //
 // Copyright (C) 2006 Michael Poppitz
-// 
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or (at
@@ -74,7 +74,7 @@ reg [2:0] bits, next_bits;
 reg [1:0] bytesel, next_bytesel;
 
 reg busy, next_busy;
-reg writeByte; 
+reg writeByte;
 
 reg [1:0] tx_state, next_tx_state;
 reg [9:0] tx_count, next_tx_count;
@@ -105,7 +105,7 @@ end
 //
 // Transmit UART - MK
 //
-always @(posedge clock or posedge extReset) 
+always @(posedge clock or posedge extReset)
 begin
   if (extReset) begin
     tx_state = TX_IDLE;
@@ -114,7 +114,7 @@ begin
     byteDone = 1'b1;
     tx_count = 10'd0;
     tx = 1'b1;
-  end else begin 
+  end else begin
     tx_state = next_tx_state;
     bitcount = next_bitcount;
     txByte = next_txByte;
@@ -194,17 +194,17 @@ parameter [1:0] INIT = 0, IDLE = 1, SEND = 2, POLL = 3;
 reg [1:0] state, next_state;
 
 initial state = INIT;
-always @(posedge clock or posedge extReset) 
+always @(posedge clock or posedge extReset)
 begin
-  if (extReset) 
+  if (extReset)
     begin
       state = INIT;
       sampled_send_data = 32'h0;
       sampled_send_valid = 4'h0;
       bytesel = 3'h0;
       busy = 1'b0;
-    end 
-  else 
+    end
+  else
     begin
       state = next_state;
       sampled_send_data = next_sampled_send_data;
@@ -235,13 +235,13 @@ begin
         next_state = IDLE;
       end
 
-    IDLE : 
+    IDLE :
       begin
         next_sampled_send_data = send_data;
         next_sampled_send_valid = send_valid;
         next_bytesel = 0;
 
-        if (send) 
+        if (send)
           next_state = SEND;
         else if (query_id) // output dword containing "SLA1" signature
           begin
@@ -264,7 +264,7 @@ begin
         next_state = POLL;
       end
 
-    POLL : 
+    POLL :
       begin
         if (byteDone)
           next_state = (~|bytesel) ? IDLE : SEND;
@@ -274,4 +274,3 @@ begin
   endcase
 end
 endmodule
-
