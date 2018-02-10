@@ -76,7 +76,7 @@ reg [1:0] bytesel, next_bytesel;
 reg busy, next_busy;
 reg writeByte;
 
-reg [1:0] tx_state, next_tx_state;
+reg [1:0] tx_state = TX_IDLE, next_tx_state;
 reg [9:0] tx_count, next_tx_count;
 reg [2:0] bitcount, next_bitcount;
 reg [7:0] txByte, next_txByte;

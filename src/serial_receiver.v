@@ -76,7 +76,7 @@ reg [7:0] opcode, next_opcode;                // opcode byte
 reg [31:0] databuf, next_databuf;        // data dword
 reg execute, next_execute;
 
-reg [1:0] rx_state, next_rx_state;
+reg [1:0] rx_state = RX_IDLE, next_rx_state;
 reg [9:0] rx_count, next_rx_count;
 reg [2:0] bitcount, next_bitcount;
 reg [7:0] rxByte, next_rxByte;
