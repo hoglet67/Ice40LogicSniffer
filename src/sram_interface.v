@@ -197,7 +197,8 @@ end
 //
 // Instantiate RAM's (each BRAM10kx9bit in turn instantiates five 2kx9's block RAM's)...
 //
-wire [`BRAM_MAXINDEX:0] #1 ram_ADDR = address;
+wire [`BRAM_MAXINDEX:0] ram_ADDR;
+assign  #1 ram_ADDR = address;
 wire #1 ram_WE = write;
 BRAM4k8bit RAMBG0(
   .CLK(clk), .WE(ram_WE), .EN(clkenb[0]), .ADDR(ram_ADDR),

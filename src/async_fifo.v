@@ -421,11 +421,14 @@ input [ASYNC_FIFO_MAXDATA:0] wrdata;
 output [ASYNC_FIFO_MAXDATA:0] rddata;
 
 wire #1 dly_wrenb = wrenb;
-wire [ASYNC_FIFO_MAXINDEX:0] #1 dly_wrptr = wrptr;
-wire [ASYNC_FIFO_MAXDATA:0] #1 dly_wrdata = wrdata;
+wire [ASYNC_FIFO_MAXINDEX:0] dly_wrptr;
+assign #1 dly_wrptr = wrptr;
+wire [ASYNC_FIFO_MAXDATA:0] dly_wrdata;
+assign #1 dly_wrdata = wrdata;
 
 wire #1 dly_rdenb = rdenb;
-wire [ASYNC_FIFO_MAXINDEX:0] #1 dly_rdptr = rdptr;
+wire [ASYNC_FIFO_MAXINDEX:0] dly_rdptr = rdptr;
+assign #1 dly_rdptr = rdptr;
 
 (* mem2reg *)
 reg [ASYNC_FIFO_MAXDATA:0] mem[0:(1<<(ASYNC_FIFO_MAXINDEX+1))-1];
